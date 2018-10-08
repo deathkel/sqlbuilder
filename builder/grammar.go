@@ -61,16 +61,114 @@ func CompileSelect(query *Builder) (sql string, bindings []string) {
     return sql, bindings
 }
 
-func CompileUpdate() {
-
+func CompileUpdate(query *Builder) (sql string, bindings []string) {
+    //update
+    sql = addUpdate(query)
+    
+    //where
+    sql += addWhere(query)
+    
+    //offset
+    sql += addOffset(query)
+    
+    //limit
+    sql += addLimit(query)
+    
+    bindings = append(query.bindings.update, query.bindings.where...)
+    if query.offset != "" {
+        bindings = append(bindings, query.offset)
+    }
+    if query.limit != "" {
+        bindings = append(bindings, query.limit)
+    }
+    
+    return sql, bindings
 }
 
-func CompileInsert() {
-
+func CompileInsert(query *Builder) (sql string, bindings []string) {
+    //insert
+    sql = addInsert(query)
+    
+    //offset
+    sql += addOffset(query)
+    
+    //limit
+    sql += addLimit(query)
+    
+    bindings = append(query.bindings.insert, query.bindings.where...)
+    if query.offset != "" {
+        bindings = append(bindings, query.offset)
+    }
+    if query.limit != "" {
+        bindings = append(bindings, query.limit)
+    }
+    
+    return sql, bindings
 }
 
-func ComileDelete() {
+func CompileDelete(query *Builder) (sql string, bindings []string) {
+    //delete
+    sql = addDelete(query)
+    
+    //where
+    sql += addWhere(query)
+    
+    //offset
+    sql += addOffset(query)
+    
+    //limit
+    sql += addLimit(query)
+    
+    bindings = append(bindings, query.bindings.where...)
+    if query.offset != "" {
+        bindings = append(bindings, query.offset)
+    }
+    if query.limit != "" {
+        bindings = append(bindings, query.limit)
+    }
+    
+    return sql, bindings
+}
 
+func addInsert(query *Builder) (sql string) {
+    sql = "insert into " + wrapValue(query.table) + " ("
+    lenInsert := len(query.insert)
+    idx := 0
+    for _, column := range query.insert {
+        idx ++
+        sql += wrapValue(column)
+        if idx < lenInsert {
+            sql += ", "
+        }
+    }
+    sql += ") values ("
+    for i := 1; i <= lenInsert; i++ {
+        sql += "?"
+        if i < lenInsert {
+            sql += ", "
+        }
+    }
+    sql += ")"
+    return
+}
+
+func addUpdate(query *Builder) (sql string) {
+    sql = "update " + wrapValue(query.table) + " set "
+    lenUpdate := len(query.update)
+    idx := 0
+    for _, column := range query.update {
+        idx ++
+        sql += wrapValue(column) + " = ?"
+        if idx < lenUpdate {
+            sql += ", "
+        }
+    }
+    return
+}
+
+func addDelete(query *Builder) (sql string) {
+    sql = "delete " + wrapValue(query.table)
+    return
 }
 
 func addSelect(query *Builder) (string) {
@@ -116,14 +214,15 @@ func addJoin(query *Builder) (sql string) {
 func addWhere(query *Builder) (sql string) {
     lenWhere := len(query.wheres)
     if lenWhere > 0 {
-        sql += " where"
+        sql += " where ("
     }
     for key, where := range query.wheres {
-        sql += " " + wrapValue(where.column) + " " + where.operator + " ?"
+        sql += wrapValue(where.column) + " " + where.operator + " ?"
         if key < lenWhere-1 {
-            sql += " " + where.boolean
+            sql += " " + where.boolean + " "
         }
     }
+    sql += ")"
     return sql
 }
 

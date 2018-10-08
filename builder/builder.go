@@ -13,6 +13,12 @@ type Builder struct {
     
     table string
     
+    update []string
+    
+    insert []string
+    
+    delete bool
+    
     /*
     Indicates if the query return district results
      */
@@ -43,6 +49,8 @@ type Builder struct {
 
 type bindings struct {
     selected []string
+    insert   []string
+    update   []string
     from     []string
     join     []string
     where    []string
@@ -275,16 +283,30 @@ func (b *Builder) Avg() {
     
 }
 
-func (b *Builder) Insert() {
+func (b *Builder) Insert(table string, info map[string]string) (*Builder) {
+    b.table = table
     
+    for column, value := range info {
+        b.insert = append(b.insert, column)
+        b.bindings.insert = append(b.bindings.insert, value)
+    }
+    return b
 }
 
-func (b *Builder) Update() {
-
+func (b *Builder) Update(table string, info map[string]string) (*Builder) {
+    b.table = table
+    for column, value := range info {
+        b.update = append(b.update, column)
+        b.bindings.update = append(b.bindings.update, value)
+    }
+    return b
 }
 
-func (b *Builder) Delete() {
-
+func (b *Builder) Delete(table string) (*Builder) {
+    b.table = table
+    b.delete = true
+    return b
+    
 }
 
 func (b *Builder) Increment() {
@@ -296,6 +318,13 @@ func (b *Builder) Decrement() {
 }
 
 func (b *Builder) ToSql() (sql string, bindings []string) {
-    sql, bindings = CompileSelect(b)
-    return
+    if b.delete {
+        return CompileDelete(b)
+    } else if len(b.insert) > 0 {
+        return CompileInsert(b)
+    } else if len(b.update) > 0 {
+        return CompileUpdate(b)
+    } else {
+        return CompileSelect(b)
+    }
 }
