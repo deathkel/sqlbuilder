@@ -13,7 +13,7 @@ sql, bindings := b.Select("*").From("user").toSql()
 * case 2: ``select *, `user`.`name`, count(1) as count from `user` where (id = ?) ``
 ```go
 ...
-sql, bindings := b.Select("*", "user.name", "count(1) as count").From("user").Where("id", "1")toSql()
+sql, bindings := b.Select("*", "user.name", "count(1) as count").From("user").Where("id", "1").toSql()
 ...
 ```
 ##### INSERT
