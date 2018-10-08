@@ -1,7 +1,7 @@
 package test
 
 import (
-    "sqlbuilder/builder"
+    "github.com/deathkel/sqlbuilder/builder"
     "testing"
     "reflect"
 )
