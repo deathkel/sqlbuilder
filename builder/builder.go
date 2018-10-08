@@ -5,37 +5,46 @@ import (
 )
 
 type Builder struct {
+    //The query value bindings
     bindings
-    /*
-    The Columns that should be return
-     */
+    
+    //The Columns that should be return
     columns []string
     
+    //The table which the query is targeting
     table string
     
+    //Update columns
     update []string
     
+    //Insert columns
     insert []string
     
+    //Indicates is delete sql.
     delete bool
     
-    /*
-    Indicates if the query return district results
-     */
+    //Indicates if the query return district results.
     district bool
     
+    //The where constraints for the query.
     wheres []*where
     
+    //The groupings for the query.
     groups []string
     
+    //The havings constraints for the query.
     havings []*where
     
+    //The table joins for the query.
     joins []*join
     
+    //The orderings for the query.
     orders []*order
     
+    //The maximum number of records to return.
     limit string
     
+    //The number of records to skip.
     offset string
     
     unions []string
@@ -77,11 +86,13 @@ type order struct {
     direction string
 }
 
+//All of the available clause operators.
 var operators = []string{"=", "<", ">", "<=", ">=", "<>", "!=", "<=>", "like", "like binary", "not like", "ilike",
     "&", "|", "^", "<<", ">>", "rlike", "regexp", "not regexp", "~", "~*", "!~", "!~*", "similar to", "not similar to",
     "not ilike", "~~*", "!~~*",
 }
 
+//Is val in array
 func in_array(val interface{}, array interface{}) (exists bool, index int) {
     exists = false
     index = -1
@@ -117,7 +128,7 @@ func (b *Builder) From(table string) (*Builder) {
     return b
 }
 
-/**
+/*
 Where("column", "1")
 Where("column", "=","1")
 Where("column", "=", "1", "or")
@@ -160,7 +171,7 @@ func (b *Builder) addArrayOfWheres(wheres map[string]string, boolean string) (*B
     return b
 }
 
-/**
+/*
 Join("tableB", "tableB.id = tableA.bId")
  */
 func (b *Builder) Join(table string, condition string, args ...string) (*Builder) {
@@ -193,7 +204,7 @@ func (b *Builder) GroupBy(group interface{}) (*Builder) {
     return b
 }
 
-/**
+/*
 Having("column", "1")
 Having("column", "=","1")
 Having("column", "=", "1", "or")
@@ -259,26 +270,32 @@ func (b *Builder) Limit(limit string) (*Builder) {
     return b
 }
 
+//TODO
 func (b *Builder) Union() (*Builder) {
     return b
 }
 
+//TODO
 func (b *Builder) Count() {
 
 }
 
+//TODO
 func (b *Builder) Min() {
     
 }
 
+//TODO
 func (b *Builder) Max() {
     
 }
 
+//TODO
 func (b *Builder) Sum() {
     
 }
 
+//TODO
 func (b *Builder) Avg() {
     
 }
@@ -309,10 +326,11 @@ func (b *Builder) Delete(table string) (*Builder) {
     
 }
 
+//TODO
 func (b *Builder) Increment() {
 
 }
-
+//TODO
 func (b *Builder) Decrement() {
 
 }
