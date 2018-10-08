@@ -1,7 +1,8 @@
 ## golang SQL builder
 ### this is a sql builder in golang 
+
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Quality Score](https://img.shields.io/scrutinizer/g/deathkel/sqlbuilder.svg?style=flat-square)](https://scrutinizer-ci.com/g/deathkel/sqlbuilder)
+[![Quality Score](https://scrutinizer-ci.com/g/deathkel/sqlbuilder/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/deathkel/sqlbuilder)
 #### USAGE:
 #### EXAMPLE
 ##### SELECT
