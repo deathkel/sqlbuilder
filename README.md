@@ -1,5 +1,5 @@
 ## golang SQL builder
-### this is a sql builder in golang 
+### this is a sql builder for golang in chain style 
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Quality Score](https://scrutinizer-ci.com/g/deathkel/sqlbuilder/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/deathkel/sqlbuilder)
