@@ -15,7 +15,7 @@ type Builder struct {
     table string
     
     //Update columns
-    update []string
+    update []interface{}
     
     //Insert columns
     insert []string
@@ -46,14 +46,6 @@ type Builder struct {
     
     //The number of records to skip.
     offset string
-    
-    unions []string
-    
-    unionList string
-    
-    unionLimit string
-    
-    unionOrders []string
 }
 
 type bindings struct {
@@ -65,7 +57,11 @@ type bindings struct {
     where    []string
     having   []string
     order    []string
-    union    []string
+}
+
+//Expression for raw sql
+type Expression struct {
+    Value string
 }
 
 type where struct {
@@ -270,36 +266,6 @@ func (b *Builder) Limit(limit string) (*Builder) {
     return b
 }
 
-//TODO
-func (b *Builder) Union() (*Builder) {
-    return b
-}
-
-//TODO
-func (b *Builder) Count() {
-
-}
-
-//TODO
-func (b *Builder) Min() {
-    
-}
-
-//TODO
-func (b *Builder) Max() {
-    
-}
-
-//TODO
-func (b *Builder) Sum() {
-    
-}
-
-//TODO
-func (b *Builder) Avg() {
-    
-}
-
 func (b *Builder) Insert(table string, info map[string]string) (*Builder) {
     b.table = table
     
@@ -310,11 +276,18 @@ func (b *Builder) Insert(table string, info map[string]string) (*Builder) {
     return b
 }
 
-func (b *Builder) Update(table string, info map[string]string) (*Builder) {
+func (b *Builder) Update(table string, info map[string]interface{}) (*Builder) {
     b.table = table
     for column, value := range info {
-        b.update = append(b.update, column)
-        b.bindings.update = append(b.bindings.update, value)
+        
+        switch value.(type) {
+        case string:
+            b.update = append(b.update, column)
+            b.bindings.update = append(b.bindings.update, value.(string))
+        case *Expression:
+            //表达式： 如 a = a + 1
+            b.update = append(b.update, value)
+        }
     }
     return b
 }
@@ -323,16 +296,6 @@ func (b *Builder) Delete(table string) (*Builder) {
     b.table = table
     b.delete = true
     return b
-    
-}
-
-//TODO
-func (b *Builder) Increment() {
-
-}
-//TODO
-func (b *Builder) Decrement() {
-
 }
 
 func (b *Builder) ToSql() (sql string, bindings []string) {

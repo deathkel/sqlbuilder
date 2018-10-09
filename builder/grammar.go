@@ -158,7 +158,13 @@ func addUpdate(query *Builder) (sql string) {
     idx := 0
     for _, column := range query.update {
         idx ++
-        sql += wrapValue(column) + " = ?"
+        switch column.(type) {
+        case string:
+            sql += wrapValue(column.(string)) + " = ?"
+        case *Expression:
+            sql += column.(*Expression).Value
+        }
+        
         if idx < lenUpdate {
             sql += ", "
         }
@@ -222,7 +228,10 @@ func addWhere(query *Builder) (sql string) {
             sql += " " + where.boolean + " "
         }
     }
-    sql += ")"
+    if lenWhere > 0 {
+        sql += ")"
+    }
+    
     return sql
 }
 

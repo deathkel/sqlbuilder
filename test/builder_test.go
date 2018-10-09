@@ -58,7 +58,7 @@ func Test_Insert(t *testing.T) {
 func Test_Update(t *testing.T) {
     b := new(builder.Builder)
     
-    info := map[string]string{"name": "john"}
+    info := map[string]interface{}{"name": "john"}
     sql, bindings := b.Update("ta", info).
         Where("name", "kel").
         Where("sex", "2").
@@ -87,6 +87,19 @@ func Test_Delete(t *testing.T) {
     }
     
     if !reflect.DeepEqual(bindings, []string{"kel", "2", "1", "2"}) {
+        t.Error(bindings)
+    }
+}
+
+func Test_Increment(t *testing.T) {
+    b := new(builder.Builder)
+    sql, bindings := b.Update("ta", map[string]interface{}{"increase a": &builder.Expression{Value: "a = a + 1"}}).
+        ToSql()
+    if sql != "update `ta` set a = a + 1" {
+        t.Error(sql)
+    }
+    
+    if len(bindings) > 0 {
         t.Error(bindings)
     }
 }
