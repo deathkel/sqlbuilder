@@ -33,7 +33,7 @@ sql, bindings := b.Insert("user", info).toSql()
 ```go
 ...
 info := map[string]string{"name":"john", "sex":"2", "age":"22"}
-sql, bindings := b.Insert("user", info).Where("id", "1").toSql()
+sql, bindings := b.Update("user", info).Where("id", "1").toSql()
 ...
 ```
 
