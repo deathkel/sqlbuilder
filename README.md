@@ -4,6 +4,8 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Quality Score](https://scrutinizer-ci.com/g/deathkel/sqlbuilder/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/deathkel/sqlbuilder)
 #### USAGE:
+* select:
+
 #### EXAMPLE
 ##### SELECT
 * case 1:``select * from user``
@@ -36,7 +38,12 @@ info := map[string]string{"name":"john", "sex":"2", "age":"22"}
 sql, bindings := b.Update("user", info).Where("id", "1").toSql()
 ...
 ```
+* case 2(update raw): ``update `user` set `age` = `age` + 1 ``
+```go
+sql, bindings := b.Update("ta", map[string]interface{}{"increase a": &builder.Expression{Value: "a = a + 1"}}).ToSql()
 
+```
+when use Expression, map key (increase a) will be ignored
 ##### DELETE
 * case 1: ``delete `user` where (id = ?)``
 ```go
