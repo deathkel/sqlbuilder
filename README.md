@@ -3,10 +3,11 @@
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Quality Score](https://scrutinizer-ci.com/g/deathkel/sqlbuilder/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/deathkel/sqlbuilder)
-#### USAGE:
-* select:
 
-#### EXAMPLE
+#### godoc
+https://godoc.org/github.com/deathkel/sqlbuilder/builder
+
+#### USAGE
 ##### SELECT
 * case 1:``select * from user``
 ```go
