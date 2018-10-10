@@ -44,18 +44,20 @@ func CompileSelect(query *Builder) (sql string, bindings []string) {
     //order by
     sql += addOrderBy(query)
     
-    //offset
-    sql += addOffset(query)
-    
     //limit
     sql += addLimit(query)
     
+    //offset
+    sql += addOffset(query)
+    
     bindings = append(query.bindings.where, query.bindings.having...)
-    if query.offset != "" {
-        bindings = append(bindings, query.offset)
-    }
+   
     if query.limit != "" {
         bindings = append(bindings, query.limit)
+    }
+    
+    if query.offset != "" {
+        bindings = append(bindings, query.offset)
     }
     
     return sql, bindings
@@ -68,18 +70,20 @@ func CompileUpdate(query *Builder) (sql string, bindings []string) {
     //where
     sql += addWhere(query)
     
-    //offset
-    sql += addOffset(query)
-    
     //limit
     sql += addLimit(query)
     
+    //offset
+    sql += addOffset(query)
+    
     bindings = append(query.bindings.update, query.bindings.where...)
-    if query.offset != "" {
-        bindings = append(bindings, query.offset)
-    }
+    
     if query.limit != "" {
         bindings = append(bindings, query.limit)
+    }
+    
+    if query.offset != "" {
+        bindings = append(bindings, query.offset)
     }
     
     return sql, bindings
@@ -89,18 +93,20 @@ func CompileInsert(query *Builder) (sql string, bindings []string) {
     //insert
     sql = addInsert(query)
     
-    //offset
-    sql += addOffset(query)
-    
     //limit
     sql += addLimit(query)
     
+    //offset
+    sql += addOffset(query)
+    
     bindings = append(query.bindings.insert, query.bindings.where...)
-    if query.offset != "" {
-        bindings = append(bindings, query.offset)
-    }
+   
     if query.limit != "" {
         bindings = append(bindings, query.limit)
+    }
+    
+    if query.offset != "" {
+        bindings = append(bindings, query.offset)
     }
     
     return sql, bindings
@@ -113,18 +119,20 @@ func CompileDelete(query *Builder) (sql string, bindings []string) {
     //where
     sql += addWhere(query)
     
-    //offset
-    sql += addOffset(query)
-    
     //limit
     sql += addLimit(query)
     
+    //offset
+    sql += addOffset(query)
+    
     bindings = append(bindings, query.bindings.where...)
-    if query.offset != "" {
-        bindings = append(bindings, query.offset)
-    }
+   
     if query.limit != "" {
         bindings = append(bindings, query.limit)
+    }
+    
+    if query.offset != "" {
+        bindings = append(bindings, query.offset)
     }
     
     return sql, bindings
