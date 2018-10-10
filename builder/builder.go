@@ -2,6 +2,7 @@ package builder
 
 import (
     "reflect"
+    "strconv"
 )
 
 type Builder struct {
@@ -256,13 +257,23 @@ func (b *Builder) OrderByDesc(column string) (*Builder) {
     return b.OrderBy(column, "desc")
 }
 
-func (b *Builder) Offset(offset string) (*Builder) {
-    b.offset = offset
+func (b *Builder) Offset(offset interface{}) (*Builder) {
+    switch offset.(type) {
+    case string:
+        b.offset = offset.(string)
+    case int:
+        b.offset = strconv.Itoa(offset.(int))
+    }
     return b
 }
 
-func (b *Builder) Limit(limit string) (*Builder) {
-    b.limit = limit
+func (b *Builder) Limit(limit interface{}) (*Builder) {
+    switch limit.(type) {
+    case string:
+        b.limit = limit.(string)
+    case int:
+        b.limit = strconv.Itoa(limit.(int))
+    }
     return b
 }
 
