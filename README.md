@@ -11,7 +11,7 @@ https://godoc.org/github.com/deathkel/sqlbuilder/builder
 ##### SELECT
 * case 1:``select * from user``
 ```go
-b := new builder.Builder()
+b := new(builder.Builder)
 sql, bindings := b.Select("*").From("user").toSql()
 
 ```
