@@ -1,13 +1,12 @@
-package test
+package sqlbuilder
 
 import (
-    "github.com/deathkel/sqlbuilder/builder"
     "testing"
     "reflect"
 )
 
 func Test_Select(t *testing.T) {
-    b := new(builder.Builder)
+    b := new(Builder)
     sql, bindings := b.Select([]string{"*", "sex", "a.name", "count(1) as count"}).
         From("user").
         Where("a", "1").
@@ -25,7 +24,7 @@ func Test_Select(t *testing.T) {
 }
 
 func Test_Join(t *testing.T) {
-    b := new(builder.Builder)
+    b := new(Builder)
     
     sql, bindings := b.Select([]string{"*"}).From("ta").
         Join("tb", "`tb`.`aid` = `ta`.`id`").
@@ -42,7 +41,7 @@ func Test_Join(t *testing.T) {
 }
 
 func Test_Insert(t *testing.T) {
-    b := new(builder.Builder)
+    b := new(Builder)
     
     info := map[string]string{"name": "john"}
     sql, bindings := b.Insert("ta", info).ToSql()
@@ -56,7 +55,7 @@ func Test_Insert(t *testing.T) {
 }
 
 func Test_Update(t *testing.T) {
-    b := new(builder.Builder)
+    b := new(Builder)
     
     info := map[string]interface{}{"name": "john"}
     sql, bindings := b.Update("ta", info).
@@ -75,7 +74,7 @@ func Test_Update(t *testing.T) {
 }
 
 func Test_Delete(t *testing.T) {
-    b := new(builder.Builder)
+    b := new(Builder)
     sql, bindings := b.Delete("ta").
         Where("name", "kel").
         Where("sex", "2").
@@ -92,8 +91,8 @@ func Test_Delete(t *testing.T) {
 }
 
 func Test_Increment(t *testing.T) {
-    b := new(builder.Builder)
-    sql, bindings := b.Update("ta", map[string]interface{}{"increase a": &builder.Expression{Value: "a = a + 1"}}).
+    b := new(Builder)
+    sql, bindings := b.Update("ta", map[string]interface{}{"increase a": &Expression{Value: "a = a + 1"}}).
         ToSql()
     if sql != "update `ta` set a = a + 1" {
         t.Error(sql)
