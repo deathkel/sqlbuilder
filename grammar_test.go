@@ -15,10 +15,10 @@ func Test_Select(t *testing.T) {
         Limit("3").
         Offset("4").
         ToSql()
-    if sql != "select *, `sex`, a.name, count(1) as count from `user` where (`a` = ?) group by `a` having `a` > ? offset ? limit ?" {
+    if sql != "select *, `sex`, a.name, count(1) as count from `user` where (`a` = ?) group by `a` having `a` > ? limit ? offset ?" {
         t.Error(sql)
     }
-    if !reflect.DeepEqual(bindings, []string{"1", "2", "4", "3"}) {
+    if !reflect.DeepEqual(bindings, []string{"1", "2", "3", "4"}) {
         t.Error(bindings)
     }
 }
@@ -64,11 +64,11 @@ func Test_Update(t *testing.T) {
         Offset("1").
         Limit("2").
         ToSql()
-    if sql != "update `ta` set `name` = ? where (`name` = ? and `sex` = ?) offset ? limit ?" {
+    if sql != "update `ta` set `name` = ? where (`name` = ? and `sex` = ?) limit ? offset ?" {
         t.Error(sql)
     }
     
-    if !reflect.DeepEqual(bindings, []string{"john", "kel", "2", "1", "2"}) {
+    if !reflect.DeepEqual(bindings, []string{"john", "kel", "2", "2", "1"}) {
         t.Error(bindings)
     }
 }
@@ -81,11 +81,11 @@ func Test_Delete(t *testing.T) {
         Offset("1").
         Limit("2").
         ToSql()
-    if sql != "delete `ta` where (`name` = ? and `sex` = ?) offset ? limit ?" {
+    if sql != "delete `ta` where (`name` = ? and `sex` = ?) limit ? offset ?" {
         t.Error(sql)
     }
     
-    if !reflect.DeepEqual(bindings, []string{"kel", "2", "1", "2"}) {
+    if !reflect.DeepEqual(bindings, []string{"kel", "2", "2", "1"}) {
         t.Error(bindings)
     }
 }

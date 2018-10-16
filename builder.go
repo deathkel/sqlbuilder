@@ -131,17 +131,21 @@ Where("column", "=","1")
 Where("column", "=", "1", "or")
 Where(map[string]string{column1:"1", column2: "2"})
  */
-func (b *Builder) Where(column interface{}, operator string, args ...string) (*Builder) {
+func (b *Builder) Where(column interface{}, args ...string) (*Builder) {
     switch column.(type) {
     case string:
+        operator := "="
         value := ""
         booll := "and"
         lenArgs := len(args)
-        if lenArgs == 0 {
-            value = operator
-        } else if lenArgs >= 1 {
+        if lenArgs == 1 {
             value = args[0]
-        } else if lenArgs >= 2 {
+        } else if lenArgs == 2 {
+            operator = args[0]
+            value = args[1]
+        } else if lenArgs >= 3 {
+            operator = args[0]
+            value = args[1]
             booll = args[1]
         }
         
