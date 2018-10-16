@@ -29,7 +29,7 @@ func Test_Join(t *testing.T) {
     sql, bindings := b.Select([]string{"*"}).From("ta").
         Join("tb", "`tb`.`aid` = `ta`.`id`").
         Where("ta.id", ">", "1").
-        Where("tb.name", "=", "jack").
+        Where("tb.name", "jack").
         ToSql()
     
     if sql != "select * from `ta` join `tb` on `tb`.`aid` = `ta`.`id` where (ta.id > ? and tb.name = ?)" {
