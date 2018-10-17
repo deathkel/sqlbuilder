@@ -51,7 +51,7 @@ func CompileSelect(query *Builder) (sql string, bindings []string) {
     sql += addOffset(query)
     
     bindings = append(query.bindings.where, query.bindings.having...)
-   
+    
     if query.limit != "" {
         bindings = append(bindings, query.limit)
     }
@@ -100,7 +100,7 @@ func CompileInsert(query *Builder) (sql string, bindings []string) {
     sql += addOffset(query)
     
     bindings = append(query.bindings.insert, query.bindings.where...)
-   
+    
     if query.limit != "" {
         bindings = append(bindings, query.limit)
     }
@@ -126,7 +126,7 @@ func CompileDelete(query *Builder) (sql string, bindings []string) {
     sql += addOffset(query)
     
     bindings = append(bindings, query.bindings.where...)
-   
+    
     if query.limit != "" {
         bindings = append(bindings, query.limit)
     }
@@ -231,7 +231,21 @@ func addWhere(query *Builder) (sql string) {
         sql += " where ("
     }
     for key, where := range query.wheres {
-        sql += wrapValue(where.column) + " " + where.operator + " ?"
+        if where.operator == "in" || where.operator == "not in" {
+            sql += wrapValue(where.column) + " " + where.operator + " ("
+            lenVal := len(where.value.([]string))
+            for i := 0; i < lenVal; i++ {
+                if i == lenVal -1 {
+                    sql += "? "
+                }else{
+                    sql += "?, "
+                }
+            }
+            
+            sql += ")"
+        }else{
+            sql += wrapValue(where.column) + " " + where.operator + " ?"
+        }
         if key < lenWhere-1 {
             sql += " " + where.boolean + " "
         }

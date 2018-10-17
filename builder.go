@@ -68,7 +68,7 @@ type Expression struct {
 type where struct {
     column   string
     operator string
-    value    string
+    value    interface{}
     boolean  string
 }
 
@@ -86,7 +86,7 @@ type order struct {
 //All of the available clause operators.
 var operators = []string{"=", "<", ">", "<=", ">=", "<>", "!=", "<=>", "like", "like binary", "not like", "ilike",
     "&", "|", "^", "<<", ">>", "rlike", "regexp", "not regexp", "~", "~*", "!~", "!~*", "similar to", "not similar to",
-    "not ilike", "~~*", "!~~*",
+    "not ilike", "~~*", "!~~*", "in", "not in",
 }
 
 //Is val in array
@@ -131,7 +131,7 @@ Where("column", "=","1")
 Where("column", "=", "1", "or")
 Where(map[string]string{column1:"1", column2: "2"})
  */
-func (b *Builder) Where(column interface{}, args ...string) (*Builder) {
+func (b *Builder) Where(column interface{}, args ...interface{}) (*Builder) {
     switch column.(type) {
     case string:
         operator := "="
@@ -139,14 +139,29 @@ func (b *Builder) Where(column interface{}, args ...string) (*Builder) {
         booll := "and"
         lenArgs := len(args)
         if lenArgs == 1 {
-            value = args[0]
+            value = args[0].(string)
         } else if lenArgs == 2 {
-            operator = args[0]
-            value = args[1]
+            operator = args[0].(string)
+    
+            switch args[1].(type) {
+            case string:
+                value = args[1].(string)
+              
+            case []string:
+                //支持 where in 操作
+                if !b.invalidOperator(operator) {
+                    operator = "="
+                }
+                condition := &where{column.(string), operator, args[1], booll}
+                b.wheres = append(b.wheres, condition)
+                b.bindings.where = append(b.bindings.where, args[1].([]string)...)
+                goto end
+            }
+           
         } else if lenArgs >= 3 {
-            operator = args[0]
-            value = args[1]
-            booll = args[1]
+            operator = args[0].(string)
+            value = args[1].(string)
+            booll = args[1].(string)
         }
         
         if !b.invalidOperator(operator) {
@@ -160,6 +175,7 @@ func (b *Builder) Where(column interface{}, args ...string) (*Builder) {
         return b.addArrayOfWheres(column.(map[string]string), "and")
     }
     
+    end:
     return b
 }
 

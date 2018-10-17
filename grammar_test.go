@@ -102,3 +102,18 @@ func Test_Increment(t *testing.T) {
         t.Error(bindings)
     }
 }
+
+func Test_WhereIn(t *testing.T) {
+    b := new(Builder)
+    sql, bindings := b.Select([]string{"*"}).
+        From("user").
+        Where("a", "in", []string{"1", "2", "3", "4"}).
+        Where("b", "not in", []string{"1", "2", "3", "4"}).
+        ToSql()
+    if sql != "select * from `user` where (`a` in (?, ?, ?, ? ) and `b` not in (?, ?, ?, ? ))" {
+        t.Error(sql)
+    }
+    if !reflect.DeepEqual(bindings, []string{"1", "2", "3", "4", "1", "2", "3", "4"}) {
+        t.Error(bindings)
+    }
+}
