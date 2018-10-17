@@ -128,6 +128,7 @@ func (b *Builder) From(table string) (*Builder) {
 /*
 Where("column", "1")
 Where("column", "=","1")
+Where("column", "in", []string{"1","2","3"})
 Where("column", "=", "1", "or")
 Where(map[string]string{column1:"1", column2: "2"})
  */
@@ -142,11 +143,11 @@ func (b *Builder) Where(column interface{}, args ...interface{}) (*Builder) {
             value = args[0].(string)
         } else if lenArgs == 2 {
             operator = args[0].(string)
-    
+            
             switch args[1].(type) {
             case string:
                 value = args[1].(string)
-              
+            
             case []string:
                 //支持 where in 操作
                 if !b.invalidOperator(operator) {
@@ -157,7 +158,7 @@ func (b *Builder) Where(column interface{}, args ...interface{}) (*Builder) {
                 b.bindings.where = append(b.bindings.where, args[1].([]string)...)
                 goto end
             }
-           
+            
         } else if lenArgs >= 3 {
             operator = args[0].(string)
             value = args[1].(string)
@@ -174,8 +175,8 @@ func (b *Builder) Where(column interface{}, args ...interface{}) (*Builder) {
     case map[string]string:
         return b.addArrayOfWheres(column.(map[string]string), "and")
     }
-    
-    end:
+
+end:
     return b
 }
 
